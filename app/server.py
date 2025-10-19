@@ -1,3 +1,28 @@
+# ...existing code...
+
+@app.route('/open_price_rolling')
+def open_price_rolling():
+    dfs = load_and_split_data()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    colors = ['blue', 'orange', 'green', 'red']
+    for i, df in enumerate(dfs):
+        if 'Date' not in df.columns or 'Open' not in df.columns:
+            continue
+        df = df.copy()
+        df = df.sort_values('Date')
+        df['Year'] = df['Date'].dt.year
+        # Calculate yearly rolling average (window=365 days)
+        df['RollingAvgOpen'] = df['Open'].rolling(window=365, min_periods=30).mean()
+        ax.plot(df['Date'], df['RollingAvgOpen'], label=f'Split {i+1}', color=colors[i])
+    ax.set_ylabel('Yearly Rolling Avg Open Price')
+    ax.set_title('Yearly Rolling Average Open Price by Timeframe')
+    ax.legend()
+    plt.tight_layout()
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png')
 from flask import send_file
 import matplotlib.pyplot as plt
 import io

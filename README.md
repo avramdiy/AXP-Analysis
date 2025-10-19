@@ -42,4 +42,8 @@
 
 ### 4th Commit
 
+- Added a Flask route `/open_price_rolling` that visualizes a line chart of the yearly rolling average open price for each of the four timeframes (splits).
+- The chart is generated using matplotlib and returned as a PNG image, allowing users to observe long-term price trends and smoothing out short-term volatility.
+- This helps highlight periods of sustained growth or decline, and makes it easier to compare price evolution across different eras in American Express history.
+
 ### 5th Commit
