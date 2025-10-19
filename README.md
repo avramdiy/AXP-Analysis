@@ -47,3 +47,13 @@
 - This helps highlight periods of sustained growth or decline, and makes it easier to compare price evolution across different eras in American Express history.
 
 ### 5th Commit
+
+- Added a Flask route `/bollinger_bands` that generates a 2x2 grid of Bollinger Bands visualizations for each timeframe split.
+- Each subplot shows:
+  - 20-day moving average (blue line)
+  - Upper and lower bands at 2 standard deviations (red dashed lines)
+  - Daily closing prices (gray line)
+- This technical analysis helps identify:
+  - Periods of high volatility (wide bands)
+  - Potential overbought/oversold conditions
+  - Trend strength and price stability across different eras

@@ -133,5 +133,50 @@ def table_split(split_id):
     return Response(html, mimetype='text/html')
 
 
+@app.route('/bollinger_bands')
+def bollinger_bands():
+    dfs = load_and_split_data()
+    fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+    axes = axes.ravel()
+    
+    for i, (df, ax) in enumerate(zip(dfs, axes)):
+        if 'Date' not in df.columns or 'Close' not in df.columns:
+            continue
+            
+        df = df.copy().sort_values('Date')
+        
+        # Calculate 20-day moving average and standard deviation
+        window = 20
+        df['MA20'] = df['Close'].rolling(window=window).mean()
+        df['STD20'] = df['Close'].rolling(window=window).std()
+        
+        # Calculate upper and lower Bollinger Bands
+        df['Upper'] = df['MA20'] + (df['STD20'] * 2)
+        df['Lower'] = df['MA20'] - (df['STD20'] * 2)
+        
+        # Plot the bands and price
+        ax.plot(df['Date'], df['Close'], label='Close Price', alpha=0.6, color='gray')
+        ax.plot(df['Date'], df['MA20'], label='20-day MA', color='blue')
+        ax.plot(df['Date'], df['Upper'], label='Upper Band', color='red', linestyle='--')
+        ax.plot(df['Date'], df['Lower'], label='Lower Band', color='red', linestyle='--')
+        
+        # Format the subplot
+        ax.set_title(f'Split {i+1}: {df["Date"].min().strftime("%Y")} - {df["Date"].max().strftime("%Y")}')
+        if i == 0 or i == 2:  # Left subplots
+            ax.set_ylabel('Price')
+        ax.legend(loc='upper left', fontsize='small')
+        ax.tick_params(axis='x', rotation=45)
+    
+    plt.suptitle('Bollinger Bands Analysis (20-day MA ± 2σ)', y=1.02)
+    plt.tight_layout()
+    
+    # Save to buffer and return
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', dpi=120)
+    plt.close(fig)
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png')
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)
