@@ -1,3 +1,35 @@
+from flask import send_file
+import matplotlib.pyplot as plt
+import io
+# ...existing code...
+
+@app.route('/volume_chart')
+def volume_chart():
+    dfs = load_and_split_data()
+    avg_monthly_volumes = []
+    labels = []
+    for i, df in enumerate(dfs):
+        if 'Date' not in df.columns or 'Volume' not in df.columns:
+            avg_monthly_volumes.append(0)
+            labels.append(f'Split {i+1}')
+            continue
+        df = df.copy()
+        df['YearMonth'] = df['Date'].dt.to_period('M')
+        monthly_avg = df.groupby('YearMonth')['Volume'].mean().mean()
+        avg_monthly_volumes.append(monthly_avg)
+        labels.append(f'Split {i+1}')
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.bar(labels, avg_monthly_volumes, color='skyblue')
+    ax.set_ylabel('Average Monthly Volume')
+    ax.set_title('Average Monthly Volume by Timeframe')
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png')
 from flask import Flask, Response, abort
 import pandas as pd
 import os

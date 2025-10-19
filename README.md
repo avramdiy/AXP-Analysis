@@ -36,6 +36,10 @@
 
 ### 3rd Commit
 
+- Added a Flask route `/volume_chart` that visualizes a bar chart of the average monthly volume for each of the four timeframes (splits).
+- The chart is generated using matplotlib and returned as a PNG image for quick visual comparison.
+- This helps users spot differences in trading activity across eras, identify periods of higher/lower liquidity, and contextualize macro trends in American Express stock volume.
+
 ### 4th Commit
 
 ### 5th Commit
