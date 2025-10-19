@@ -22,6 +22,18 @@
 
 ### 2nd Commit
 
+- Dropped the "OpenInt" column from the dataset for clarity and relevance (it was always zero and not useful for analysis).
+- Split the data into 4 separate dataframes by timeframe:
+	1. 1972-01-07 to 1985-12-31
+	2. 1986-01-01 to 1999-12-31
+	3. 2000-01-01 to 2009-12-31
+	4. 2010-01-01 to 2017-11-10
+- Each split is served at `/table/1`, `/table/2`, `/table/3`, and `/table/4` for focused inspection.
+
+**Reasoning:**
+- Splitting by timeframes enables targeted analysis of macro trends, market cycles, and company evolution across distinct periods (e.g., pre-1986, late 20th century, early 21st century, and post-2010).
+- This approach helps highlight changes in trading volume, price behavior, and external events (such as regulatory shifts or financial crises) that may have impacted American Express differently in each era.
+
 ### 3rd Commit
 
 ### 4th Commit
